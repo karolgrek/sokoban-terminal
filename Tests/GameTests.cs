@@ -24,6 +24,8 @@ namespace Sokoban.Tests
             Test_Player();
             Test_Crate();
             Test_Reset();
+            
+            UISmokeTests.RunAll();
      
             Console.WriteLine("All tests passed.");
         }

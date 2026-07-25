@@ -6,7 +6,8 @@ namespace Sokoban
     {
         static void Main()
         {
-            ConsoleMenu.Run();
+            IConsole console = new SystemConsole();
+            ConsoleMenu.Run(console);
         }
     }
 }

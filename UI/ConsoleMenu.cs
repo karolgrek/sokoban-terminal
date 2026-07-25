@@ -79,18 +79,18 @@ namespace Sokoban.UI
             "##########"
         };
 
-        public static void Run()
+        public static void Run(IConsole console)
         {
             while (true)
             {
-                Console.Clear();
-                Console.WriteLine("Welcome to Sokoban Terminal!");
-                Console.WriteLine("Select game mode (or press 'T' for Tutorial):");
-                Console.WriteLine("1 - Single-Agent (Classic Sokoban)");
-                Console.WriteLine("2 - Multi-Agent (Multiple agents moving at the same time)");
-                Console.WriteLine("Q - Quit");
+                console.Clear();
+                console.WriteLine("Welcome to Sokoban Terminal!");
+                console.WriteLine("Select game mode (or press 'T' for Tutorial):");
+                console.WriteLine("1 - Single-Agent (Classic Sokoban)");
+                console.WriteLine("2 - Multi-Agent (Multiple agents moving at the same time)");
+                console.WriteLine("Q - Quit");
 
-                char modeChoice = Console.ReadKey(true).KeyChar;
+                char modeChoice = console.ReadKey(true).KeyChar;
 
                 if (modeChoice == 'q' || modeChoice == 'Q')
                 {
@@ -98,33 +98,33 @@ namespace Sokoban.UI
                 }
                 else if (modeChoice == 't' || modeChoice == 'T')
                 {
-                    ShowTutorial();
+                    ShowTutorial(console);
                     continue;
                 }
                 else if (modeChoice == '1' || modeChoice == '2')
                 {
-                    RunDifficultyMenu(modeChoice);
+                    RunDifficultyMenu(console, modeChoice);
                 }
             }
         }
 
-        private static void RunDifficultyMenu(char modeChoice)
+        private static void RunDifficultyMenu(IConsole console, char modeChoice)
         {
             string modeName = modeChoice == '1' ? "SINGLE-AGENT MODE" : "MULTI-AGENT MODE";
             
-            Console.Clear();
-            Console.WriteLine($"--- {modeName} ---");
-            Console.WriteLine("Select difficulty:");
-            Console.WriteLine("1 - Easy");
-            Console.WriteLine("2 - Medium");
-            Console.WriteLine("3 - Hard");
-            Console.WriteLine("4 - Impossible");
-            Console.WriteLine("B - Back to Main Menu");
+            console.Clear();
+            console.WriteLine($"--- {modeName} ---");
+            console.WriteLine("Select difficulty:");
+            console.WriteLine("1 - Easy");
+            console.WriteLine("2 - Medium");
+            console.WriteLine("3 - Hard");
+            console.WriteLine("4 - Impossible");
+            console.WriteLine("B - Back to Main Menu");
 
             char diffChoice;
             while (true)
             {
-                diffChoice = Console.ReadKey(true).KeyChar;
+                diffChoice = console.ReadKey(true).KeyChar;
                 if (diffChoice == 'b' || diffChoice == 'B') return;
                 if (diffChoice >= '1' && diffChoice <= '4') break;
             }
@@ -153,49 +153,49 @@ namespace Sokoban.UI
                 }
             }
 
-            GameEngine engine = new GameEngine(selectedMap, diffName);
+            GameEngine engine = new GameEngine(console, selectedMap, diffName);
             engine.GameLoop();
             
-            Console.WriteLine("Press any key to return to the main menu...");
-            Console.ReadKey(true);
+            console.WriteLine("Press any key to return to the main menu...");
+            console.ReadKey(true);
         }
 
-        private static void ShowTutorial()
+        private static void ShowTutorial(IConsole console)
         {
-            Console.Clear();
-            Console.WriteLine("=== SOKOBAN TUTORIAL ===");
-            Console.WriteLine("Goal:");
-            Console.WriteLine("Push all crates (X) onto the target spots (.).");
-            Console.WriteLine();
-            Console.WriteLine("Controls:");
-            Console.WriteLine("W - Move Up");
-            Console.WriteLine("S - Move Down");
-            Console.WriteLine("A - Move Left");
-            Console.WriteLine("D - Move Right");
-            Console.WriteLine("R - Restart the current level");
-            Console.WriteLine("Q - Quit the game (or return to menu)");
-            Console.WriteLine();
-            Console.WriteLine("Symbols:");
-            Console.WriteLine(" o  - You (the player)");
-            Console.WriteLine(" #  - Wall");
-            Console.WriteLine(" X  - Crate");
-            Console.WriteLine(" .  - Target");
-            Console.WriteLine(" x  - Crate already on a target");
-            Console.WriteLine(" ^v>< - Other agents (if any)");
-            Console.WriteLine();
-            Console.WriteLine("What is an Agent (^v><)?");
-            Console.WriteLine(" - They are automated entities that move independently on every turn.");
-            Console.WriteLine(" - They follow a fixed patrol route (e.g., up and down a hallway).");
-            Console.WriteLine(" - They bounce back when hitting a wall, crate, or another agent.");
-            Console.WriteLine(" - They DO NOT respond to your movement commands.");
-            Console.WriteLine();
-            Console.WriteLine("Rules:");
-            Console.WriteLine(" - You cannot push other agents.");
-            Console.WriteLine(" - AGENTS CANNOT COLLIDE! If you or any other agents bump");
-            Console.WriteLine("   into each other, it's GAME OVER.");
-            Console.WriteLine();
-            Console.WriteLine("Press any key to return to the menu...");
-            Console.ReadKey(true);
+            console.Clear();
+            console.WriteLine("=== SOKOBAN TUTORIAL ===");
+            console.WriteLine("Goal:");
+            console.WriteLine("Push all crates (X) onto the target spots (.).");
+            console.WriteLine();
+            console.WriteLine("Controls:");
+            console.WriteLine("W - Move Up");
+            console.WriteLine("S - Move Down");
+            console.WriteLine("A - Move Left");
+            console.WriteLine("D - Move Right");
+            console.WriteLine("R - Restart the current level");
+            console.WriteLine("Q - Quit the game (or return to menu)");
+            console.WriteLine();
+            console.WriteLine("Symbols:");
+            console.WriteLine(" o  - You (the player)");
+            console.WriteLine(" #  - Wall");
+            console.WriteLine(" X  - Crate");
+            console.WriteLine(" .  - Target");
+            console.WriteLine(" x  - Crate already on a target");
+            console.WriteLine(" ^v>< - Other agents (if any)");
+            console.WriteLine();
+            console.WriteLine("What is an Agent (^v><)?");
+            console.WriteLine(" - They are automated entities that move independently on every turn.");
+            console.WriteLine(" - They follow a fixed patrol route (e.g., up and down a hallway).");
+            console.WriteLine(" - They bounce back when hitting a wall, crate, or another agent.");
+            console.WriteLine(" - They DO NOT respond to your movement commands.");
+            console.WriteLine();
+            console.WriteLine("Rules:");
+            console.WriteLine(" - You cannot push other agents.");
+            console.WriteLine(" - AGENTS CANNOT COLLIDE! If you or any other agents bump");
+            console.WriteLine("   into each other, it's GAME OVER.");
+            console.WriteLine();
+            console.WriteLine("Press any key to return to the menu...");
+            console.ReadKey(true);
         }
     }
 }

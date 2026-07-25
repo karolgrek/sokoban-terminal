@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Sokoban.Models;
+using Sokoban.UI;
 
 namespace Sokoban.Core
 {
@@ -11,18 +12,23 @@ namespace Sokoban.Core
         private List<GameObject> objs;
         private List<List<GameObject>> board;
         private string levelName;
+        private readonly IConsole _console;
 
-        public GameEngine(string[] map, string levelName = "")
+        public GameEngine(IConsole console, string[] map, string levelName = "")
         {
+            this._console = console;
             this.levelName = levelName;
             int height = map.Length;
             int width = 0;
 
+            for (int i = 0; i < height; i++)
+                if (map[i].Length > width)
+                    width = map[i].Length;
+
             objs = new List<GameObject>();
 
-            for (int y = 0; y < map.Length; y++)
+            for (int y = 0; y < height; y++)
             {
-                width = Math.Max(width, map[y].Length);
                 for (int x = 0; x < map[y].Length; x++)
                 {
                     Position newPosition = new Position(x, y);
@@ -30,13 +36,13 @@ namespace Sokoban.Core
                     switch (map[y][x])
                     {
                         case '#': objs.Add(new Wall(newPosition)); break;
-                        case '.': objs.Add(new Target(newPosition)); break;
-                        case '^': objs.Add(new Agent(newPosition, Direction.North)); break;
-                        case '>': objs.Add(new Agent(newPosition, Direction.East)); break;
-                        case 'v': objs.Add(new Agent(newPosition, Direction.South)); break;
-                        case '<': objs.Add(new Agent(newPosition, Direction.West)); break;
                         case 'o': objs.Add(new Player(newPosition)); break;
                         case 'X': objs.Add(new Crate(newPosition)); break;
+                        case '.': objs.Add(new Target(newPosition)); break;
+                        case '^': objs.Add(new Agent(newPosition, Direction.North)); break;
+                        case 'v': objs.Add(new Agent(newPosition, Direction.South)); break;
+                        case '>': objs.Add(new Agent(newPosition, Direction.East)); break;
+                        case '<': objs.Add(new Agent(newPosition, Direction.West)); break;
                         case 'x': objs.Add(new Crate(newPosition)); objs.Add(new Target(newPosition)); break;
                     }
                 }
@@ -82,11 +88,11 @@ namespace Sokoban.Core
 
         public void ShowBoard()
         {
-            Console.Clear();
+            _console.Clear();
             if (!string.IsNullOrEmpty(levelName))
             {
-                Console.WriteLine($"=== {levelName} ===");
-                Console.WriteLine();
+                _console.WriteLine($"=== {levelName} ===");
+                _console.WriteLine();
             }
 
             foreach (var row in board)
@@ -94,23 +100,23 @@ namespace Sokoban.Core
                 foreach(GameObject obj in row)
                 {
                     if (obj == null)
-                        Console.Write(" ");
+                        _console.Write(" ");
                     else
-                        Console.Write(obj.Repr());
-                    Console.Write(" ");
+                        _console.Write(obj.Repr().ToString());
+                    _console.Write(" ");
                 }
-                Console.Write("\n");
+                _console.Write("\n");
             }
-            Console.WriteLine("\nMove: W,A,S,D | Restart: R | Quit: Q");
+            _console.WriteLine("\nMove: W,A,S,D | Restart: R | Quit: Q");
         }
 
         private char GetNextPlayerMove()
         {
-            char input = Console.ReadKey().KeyChar;
+            char input = _console.ReadKey(true).KeyChar;
             while (!AllowedMoves.Contains(input))
             {
-                Console.WriteLine("Allowed moves are {0}", String.Join(", ", AllowedMoves));
-                input = Console.ReadKey().KeyChar;
+                _console.WriteLine($"Allowed moves are {String.Join(", ", AllowedMoves)}");
+                input = _console.ReadKey(true).KeyChar;
             }
             return input;
         }
@@ -235,9 +241,9 @@ namespace Sokoban.Core
 
             ShowBoard();
             if (AgentsCollide())
-                Console.WriteLine("Agents collided.");
+                _console.WriteLine("Agents collided.");
             else
-                Console.WriteLine("Solved!");
+                _console.WriteLine("Solved!");
         }
     }
 }
