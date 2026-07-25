@@ -11,10 +11,10 @@ namespace Sokoban.Tests
         {
             return new Dictionary<Direction, GameObject>
             {
-                { Direction.North, null },
-                { Direction.East,  null },
-                { Direction.South, null },
-                { Direction.West,  null }
+                { Direction.North, null! },
+                { Direction.East,  null! },
+                { Direction.South, null! },
+                { Direction.West,  null! }
             };
         }
 

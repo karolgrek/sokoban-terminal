@@ -5,14 +5,15 @@ namespace Sokoban.UI
 {
     public class ConsoleMenu
     {
-        private static readonly string[] easy = {
+        // --- SINGLE-AGENT MAPS ---
+        private static readonly string[] singleEasy = {
             "###",
             "#.#",
             "#X#",
             "#o#",
             "###",
         };
-        private static readonly string[] medium = {
+        private static readonly string[] singleMedium = {
             "  #####",
             "###   #",
             "#.oX  #",
@@ -23,7 +24,7 @@ namespace Sokoban.UI
             "#   .  #",
             "########",
         };
-        private static readonly string[] hard = {
+        private static readonly string[] singleHard = {
             "    #####",
             "    #   #",
             "    #X  #",
@@ -36,7 +37,17 @@ namespace Sokoban.UI
             "    #     #########",
             "    #######",
         };
-        private static readonly string[] collaborative = {
+        private static readonly string[] singleImpossible = {
+            "  ####",
+            "###  ####",
+            "#     X #",
+            "# #  #X #",
+            "# . .#o #",
+            "#########"
+        };
+
+        // --- MULTI-AGENT MAPS ---
+        private static readonly string[] multiEasy = {
             "       ###",
             "########o#",
             "#>X      #",
@@ -44,57 +55,109 @@ namespace Sokoban.UI
             "       #.#",
             "       ###",
         };
-        private static readonly string[] gap = {
+        private static readonly string[] multiMedium = {
             " ###",
             " # #",
             "## #####",
             "#ovX  .#",
             "########"
         };
+        private static readonly string[] multiHard = {
+            "  #######",
+            "  #     #",
+            "### v X ###",
+            "#   #     #",
+            "# o   ^ . #",
+            "###########"
+        };
+        private static readonly string[] multiImpossible = {
+            "##########",
+            "#o  X   .#",
+            "# v    ^ #",
+            "#   X    #",
+            "# .    < #",
+            "##########"
+        };
 
         public static void Run()
         {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Welcome to Sokoban Terminal!");
+                Console.WriteLine("Select game mode (or press 'T' for Tutorial):");
+                Console.WriteLine("1 - Single-Agent (Classic Sokoban)");
+                Console.WriteLine("2 - Multi-Agent (Multiple agents moving at the same time)");
+                Console.WriteLine("Q - Quit");
+
+                char modeChoice = Console.ReadKey(true).KeyChar;
+
+                if (modeChoice == 'q' || modeChoice == 'Q')
+                {
+                    return;
+                }
+                else if (modeChoice == 't' || modeChoice == 'T')
+                {
+                    ShowTutorial();
+                    continue;
+                }
+                else if (modeChoice == '1' || modeChoice == '2')
+                {
+                    RunDifficultyMenu(modeChoice);
+                }
+            }
+        }
+
+        private static void RunDifficultyMenu(char modeChoice)
+        {
+            string modeName = modeChoice == '1' ? "SINGLE-AGENT MODE" : "MULTI-AGENT MODE";
+            
             Console.Clear();
-            Console.WriteLine("Welcome to Sokoban!");
-            Console.WriteLine("Select difficulty (or press 'T' for Tutorial):");
+            Console.WriteLine($"--- {modeName} ---");
+            Console.WriteLine("Select difficulty:");
             Console.WriteLine("1 - Easy");
             Console.WriteLine("2 - Medium");
             Console.WriteLine("3 - Hard");
-            Console.WriteLine("4 - Gap");
-            Console.WriteLine("5 - Collaborative");
+            Console.WriteLine("4 - Impossible");
+            Console.WriteLine("B - Back to Main Menu");
 
-            char choice;
+            char diffChoice;
             while (true)
             {
-                choice = Console.ReadKey(true).KeyChar;
-                if (choice == 't' || choice == 'T')
-                {
-                    ShowTutorial();
-                    Console.Clear();
-                    Console.WriteLine("Welcome to Sokoban!");
-                    Console.WriteLine("Select difficulty:");
-                    Console.WriteLine("1 - Easy");
-                    Console.WriteLine("2 - Medium");
-                    Console.WriteLine("3 - Hard");
-                    Console.WriteLine("4 - Gap");
-                    Console.WriteLine("5 - Collaborative");
-                    continue;
-                }
-                if (choice >= '1' && choice <= '5') break;
+                diffChoice = Console.ReadKey(true).KeyChar;
+                if (diffChoice == 'b' || diffChoice == 'B') return;
+                if (diffChoice >= '1' && diffChoice <= '4') break;
             }
 
-            string[] selectedMap = easy;
-            switch (choice)
+            string[] selectedMap = singleEasy; // Default fallback
+            string diffName = "";
+
+            if (modeChoice == '1') // Single Agent
             {
-                case '1': selectedMap = easy; break;
-                case '2': selectedMap = medium; break;
-                case '3': selectedMap = hard; break;
-                case '4': selectedMap = gap; break;
-                case '5': selectedMap = collaborative; break;
+                switch (diffChoice)
+                {
+                    case '1': selectedMap = singleEasy; diffName = "Single-Agent: Easy"; break;
+                    case '2': selectedMap = singleMedium; diffName = "Single-Agent: Medium"; break;
+                    case '3': selectedMap = singleHard; diffName = "Single-Agent: Hard"; break;
+                    case '4': selectedMap = singleImpossible; diffName = "Single-Agent: Impossible"; break;
+                }
+            }
+            else // Multi Agent
+            {
+                switch (diffChoice)
+                {
+                    case '1': selectedMap = multiEasy; diffName = "Multi-Agent: Easy"; break;
+                    case '2': selectedMap = multiMedium; diffName = "Multi-Agent: Medium"; break;
+                    case '3': selectedMap = multiHard; diffName = "Multi-Agent: Hard"; break;
+                    case '4': selectedMap = multiImpossible; diffName = "Multi-Agent: Impossible"; break;
+                }
             }
 
-            GameEngine engine = new GameEngine(selectedMap);
+            GameEngine engine = new GameEngine(selectedMap, diffName);
             engine.GameLoop();
+            
+            Console.WriteLine("Press any key to return to the main menu...");
+            Console.ReadKey(true);
         }
 
         private static void ShowTutorial()
@@ -110,7 +173,7 @@ namespace Sokoban.UI
             Console.WriteLine("A - Move Left");
             Console.WriteLine("D - Move Right");
             Console.WriteLine("R - Restart the current level");
-            Console.WriteLine("Q - Quit the game");
+            Console.WriteLine("Q - Quit the game (or return to menu)");
             Console.WriteLine();
             Console.WriteLine("Symbols:");
             Console.WriteLine(" o  - You (the player)");
@@ -119,6 +182,11 @@ namespace Sokoban.UI
             Console.WriteLine(" .  - Target");
             Console.WriteLine(" x  - Crate already on a target");
             Console.WriteLine(" ^v>< - Other agents (if any)");
+            Console.WriteLine();
+            Console.WriteLine("Rules:");
+            Console.WriteLine(" - You cannot push other agents.");
+            Console.WriteLine(" - AGENTS CANNOT COLLIDE! If you or any other agents bump");
+            Console.WriteLine("   into each other, it's GAME OVER.");
             Console.WriteLine();
             Console.WriteLine("Press any key to return to the menu...");
             Console.ReadKey(true);

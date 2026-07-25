@@ -10,9 +10,11 @@ namespace Sokoban.Core
         private static readonly char[] AllowedMoves = {'a', 's', 'w', 'd', 'x', 'r', 'q'};
         private List<GameObject> objs;
         private List<List<GameObject>> board;
+        private string levelName;
 
-        public GameEngine(string[] map)
+        public GameEngine(string[] map, string levelName = "")
         {
+            this.levelName = levelName;
             int height = map.Length;
             int width = 0;
 
@@ -44,7 +46,7 @@ namespace Sokoban.Core
             for (int y = 0; y < height; y++) {
                 List<GameObject> row = new List<GameObject>();
                 for (int x = 0; x < width; x++)
-                    row.Add(null);
+                    row.Add(null!);
                 board.Add(row);
             }
 
@@ -56,7 +58,7 @@ namespace Sokoban.Core
             for (int y = 0; y < board.Count; y++)
             {
                 for (int x = 0; x < board[0].Count; x++)
-                    board[y][x] = null;
+                    board[y][x] = null!;
             }
 
             foreach (GameObject obj in objs.Where(o => !(o is Target)))
@@ -81,6 +83,11 @@ namespace Sokoban.Core
         public void ShowBoard()
         {
             Console.Clear();
+            if (!string.IsNullOrEmpty(levelName))
+            {
+                Console.WriteLine($"=== {levelName} ===");
+                Console.WriteLine();
+            }
 
             foreach (var row in board)
             {
@@ -94,7 +101,7 @@ namespace Sokoban.Core
                 }
                 Console.Write("\n");
             }
-            Console.WriteLine("\nYou move with W,A,S,D . Press Q to quit");
+            Console.WriteLine("\nMove: W,A,S,D | Restart: R | Quit: Q");
         }
 
         private char GetNextPlayerMove()
@@ -134,7 +141,7 @@ namespace Sokoban.Core
         {
             if (0 <= pos.x && pos.x < board[0].Count && 0 <= pos.y && pos.y < board.Count)
                 return board[pos.y][pos.x];
-            return null;
+            return null!;
         }
 
         public Dictionary<Direction, GameObject> GetNeighborhood(Position pos)
@@ -147,20 +154,36 @@ namespace Sokoban.Core
 
         public bool AgentsCollide()
         {
+            var nextPositions = new HashSet<Position>();
+
             foreach (GameObject obj in objs)
             {
                 if (obj is Agent a)
                 {
+                    // 1. Check if they bump into an adjacent agent directly
                     foreach (var entry in GetNeighborhood(a.Position))
                     {
                         if (entry.Value is Agent o) {
-                            Direction? thisDir = a.Direction;
-                            Direction? otherDir = o.Direction;
-
-                            if (thisDir != null && entry.Key == thisDir.Value)
+                            if (a.Direction != null && entry.Key == a.Direction.Value)
                                 return true;
                         }
                     }
+
+                    // 2. Predict next position to check for same-tile collision (moving into same empty space)
+                    Position nextPos = a.Position;
+                    if (a.Direction != null)
+                    {
+                        var frontObj = GetFromBoard(a.Position.Step(a.Direction.Value));
+                        if (frontObj == null || frontObj is Target)
+                        {
+                            nextPos = a.Position.Step(a.Direction.Value);
+                        }
+                    }
+
+                    if (nextPositions.Contains(nextPos))
+                        return true;
+
+                    nextPositions.Add(nextPos);
                 }
             }
             return false;
