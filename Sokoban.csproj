@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <!-- Vyberieme, ktorá trieda sa spustí, keďže máme viacero metód Main() (jednu v Game a jednu v testoch) -->
-    <StartupObject>Game</StartupObject>
+    <StartupObject>Sokoban.Program</StartupObject>
   </PropertyGroup>
 
 </Project>
