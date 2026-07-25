@@ -7,11 +7,11 @@ namespace Sokoban.UI
     {
         // --- SINGLE-AGENT MAPS ---
         private static readonly string[] singleEasy = {
-            "###",
-            "#.#",
-            "#X#",
-            "#o#",
-            "###",
+            "######",
+            "#    #",
+            "# X. #",
+            "# o  #",
+            "######"
         };
         private static readonly string[] singleMedium = {
             "  #####",
@@ -182,6 +182,12 @@ namespace Sokoban.UI
             Console.WriteLine(" .  - Target");
             Console.WriteLine(" x  - Crate already on a target");
             Console.WriteLine(" ^v>< - Other agents (if any)");
+            Console.WriteLine();
+            Console.WriteLine("What is an Agent (^v><)?");
+            Console.WriteLine(" - They are automated entities that move independently on every turn.");
+            Console.WriteLine(" - They follow a fixed patrol route (e.g., up and down a hallway).");
+            Console.WriteLine(" - They bounce back when hitting a wall, crate, or another agent.");
+            Console.WriteLine(" - They DO NOT respond to your movement commands.");
             Console.WriteLine();
             Console.WriteLine("Rules:");
             Console.WriteLine(" - You cannot push other agents.");
