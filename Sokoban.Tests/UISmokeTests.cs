@@ -1,23 +1,14 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
+using Xunit;
 using Sokoban.UI;
 
 namespace Sokoban.Tests
 {
     public class UISmokeTests
     {
-        public static void RunAll()
-        {
-            Test_Menu_Quit();
-            Test_Menu_Navigation_To_SingleEasy();
-            Test_Menu_Tutorial();
-            Test_Menu_Navigation_To_MultiHard();
-            Test_Gameplay_Win_SingleEasy();
-            Console.WriteLine("UI smoke tests passed.");
-        }
-
-        private static void Test_Menu_Quit()
+        [Fact]
+        public void Test_Menu_Quit()
         {
             var mockConsole = new MockConsole();
             mockConsole.AddKey('q'); // Press Quit at main menu
@@ -25,10 +16,11 @@ namespace Sokoban.Tests
             ConsoleMenu.Run(mockConsole);
 
             // If it returns without throwing exception, and output has "Welcome to Sokoban Terminal!", it works
-            Debug.Assert(mockConsole.OutputLines.Any(line => line.Contains("Welcome to Sokoban Terminal!")));
+            Assert.Contains(mockConsole.OutputLines, line => line.Contains("Welcome to Sokoban Terminal!"));
         }
 
-        private static void Test_Menu_Navigation_To_SingleEasy()
+        [Fact]
+        public void Test_Menu_Navigation_To_SingleEasy()
         {
             var mockConsole = new MockConsole();
             // Sequence: 
@@ -46,14 +38,14 @@ namespace Sokoban.Tests
             ConsoleMenu.Run(mockConsole);
 
             // Assert that the game board header was printed
-            // Assert that the game board header was printed
-            Debug.Assert(mockConsole.OutputLines.Any(line => line.Contains("=== Single-Agent: Easy ===")));
+            Assert.Contains(mockConsole.OutputLines, line => line.Contains("=== Single-Agent: Easy ==="));
             
             // Assert that the main menu was printed again after quitting the game
-            Debug.Assert(mockConsole.OutputLines.Count(line => line.Contains("Welcome to Sokoban Terminal!")) == 2);
+            Assert.True(mockConsole.OutputLines.Count(line => line.Contains("Welcome to Sokoban Terminal!")) == 2);
         }
 
-        private static void Test_Menu_Tutorial()
+        [Fact]
+        public void Test_Menu_Tutorial()
         {
             var mockConsole = new MockConsole();
             mockConsole.AddKey('t'); // Open tutorial
@@ -63,12 +55,13 @@ namespace Sokoban.Tests
             ConsoleMenu.Run(mockConsole);
 
             // Assert tutorial was displayed
-            Debug.Assert(mockConsole.OutputLines.Any(line => line.Contains("=== SOKOBAN TUTORIAL ===")));
+            Assert.Contains(mockConsole.OutputLines, line => line.Contains("=== SOKOBAN TUTORIAL ==="));
             // Assert main menu was displayed twice (initially, and after tutorial)
-            Debug.Assert(mockConsole.OutputLines.Count(line => line.Contains("Welcome to Sokoban Terminal!")) == 2);
+            Assert.True(mockConsole.OutputLines.Count(line => line.Contains("Welcome to Sokoban Terminal!")) == 2);
         }
 
-        private static void Test_Menu_Navigation_To_MultiHard()
+        [Fact]
+        public void Test_Menu_Navigation_To_MultiHard()
         {
             var mockConsole = new MockConsole();
             mockConsole.AddKey('2'); // Multi Agent
@@ -79,10 +72,11 @@ namespace Sokoban.Tests
 
             ConsoleMenu.Run(mockConsole);
 
-            Debug.Assert(mockConsole.OutputLines.Any(line => line.Contains("=== Multi-Agent: Hard ===")));
+            Assert.Contains(mockConsole.OutputLines, line => line.Contains("=== Multi-Agent: Hard ==="));
         }
 
-        private static void Test_Gameplay_Win_SingleEasy()
+        [Fact]
+        public void Test_Gameplay_Win_SingleEasy()
         {
             var mockConsole = new MockConsole();
             mockConsole.AddKey('1'); // Single Agent
@@ -99,7 +93,7 @@ namespace Sokoban.Tests
             ConsoleMenu.Run(mockConsole);
 
             // Assert that winning message was displayed
-            Debug.Assert(mockConsole.OutputLines.Any(line => line.Contains("Solved!")));
+            Assert.Contains(mockConsole.OutputLines, line => line.Contains("Solved!"));
         }
     }
 }

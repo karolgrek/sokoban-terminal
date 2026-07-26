@@ -9,4 +9,10 @@
     <StartupObject>Sokoban.Program</StartupObject>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Sokoban.Tests\**" />
+    <EmbeddedResource Remove="Sokoban.Tests\**" />
+    <None Remove="Sokoban.Tests\**" />
+  </ItemGroup>
+
 </Project>
