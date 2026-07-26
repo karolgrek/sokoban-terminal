@@ -24,7 +24,7 @@ namespace Sokoban.UI
             "#   .  #",
             "########",
         };
-        private static readonly string[] singleHard = {
+        private static readonly string[] singleVeryHard = {
             "    #####",
             "    #   #",
             "    #X  #",
@@ -37,7 +37,7 @@ namespace Sokoban.UI
             "    #     #########",
             "    #######",
         };
-        private static readonly string[] singleImpossible = {
+        private static readonly string[] singleHard = {
             "  ####",
             "###  ####",
             "#     X #",
@@ -63,20 +63,24 @@ namespace Sokoban.UI
             "########"
         };
         private static readonly string[] multiHard = {
-            "  #######",
-            "  #     #",
-            "### v X ###",
-            "#   #     #",
-            "# o   ^ . #",
-            "###########"
+            "#########",
+            "#      .#",
+            "# ##### #",
+            "#>      #",
+            "### ### #",
+            "# #X<   #",
+            "# # ### #",
+            "#o      #",
+            "#########"
         };
-        private static readonly string[] multiImpossible = {
-            "##########",
-            "#o  X   .#",
-            "# v    ^ #",
-            "#   X    #",
-            "# .    < #",
-            "##########"
+        private static readonly string[] multiVeryHard = {
+            "#########",
+            "#       #",
+            "# v X   #",
+            "# . o . #",
+            "#   X ^ #",
+            "#       #",
+            "#########"
         };
 
         public static void Run(IConsole console)
@@ -118,7 +122,7 @@ namespace Sokoban.UI
             console.WriteLine("1 - Easy");
             console.WriteLine("2 - Medium");
             console.WriteLine("3 - Hard");
-            console.WriteLine("4 - Impossible");
+            console.WriteLine("4 - Very Hard");
             console.WriteLine("B - Back to Main Menu");
 
             char diffChoice;
@@ -139,7 +143,7 @@ namespace Sokoban.UI
                     case '1': selectedMap = singleEasy; diffName = "Single-Agent: Easy"; break;
                     case '2': selectedMap = singleMedium; diffName = "Single-Agent: Medium"; break;
                     case '3': selectedMap = singleHard; diffName = "Single-Agent: Hard"; break;
-                    case '4': selectedMap = singleImpossible; diffName = "Single-Agent: Impossible"; break;
+                    case '4': selectedMap = singleVeryHard; diffName = "Single-Agent: Very Hard"; break;
                 }
             }
             else // Multi Agent
@@ -149,7 +153,7 @@ namespace Sokoban.UI
                     case '1': selectedMap = multiEasy; diffName = "Multi-Agent: Easy"; break;
                     case '2': selectedMap = multiMedium; diffName = "Multi-Agent: Medium"; break;
                     case '3': selectedMap = multiHard; diffName = "Multi-Agent: Hard"; break;
-                    case '4': selectedMap = multiImpossible; diffName = "Multi-Agent: Impossible"; break;
+                    case '4': selectedMap = multiVeryHard; diffName = "Multi-Agent: Very Hard"; break;
                 }
             }
 
