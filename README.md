@@ -57,49 +57,26 @@ The game engine operates on a strictly deterministic **Actor Model** pattern.
 
 <p align="center">Main Menu & Level Selection</p>
 <p align="center">
-  <img src="https://via.placeholder.com/600x300?text=Insert+Main+Menu+Screenshot+Here" width="80%" alt="Main Menu"/>
+  <img src="https://i.imgur.com/BbfMIWJ.png" width="80%" alt="Main Menu"/>
+</p>
+
+<p align="center">Choosing difficulty</p>
+<p align="center">
+  <img src="https://i.imgur.com/9qzwYKv.png" width="80%" alt="Choosing Difficulty"/>
 </p>
 
 <p align="center">Single-Agent Gameplay | Multi-Agent Gameplay</p>
 <p align="center">
-  <img src="https://via.placeholder.com/400x250?text=Single-Agent+Screenshot" width="45%" alt="Single Agent"/>
-  <img src="https://via.placeholder.com/400x250?text=Multi-Agent+Screenshot" width="45%" alt="Multi Agent"/>
+  <img src="https://i.imgur.com/JN2Ww5Q.png" width="45%" alt="Single Agent"/>
+  <img src="https://i.imgur.com/dw4mMoH.png" width="45%" alt="Multi Agent"/>
+</p>
+
+<p align="center">Tutorial</p>
+<p align="center">
+  <img src="https://i.imgur.com/dw4mMoH.png" width="80%" alt="Tutorial"/>
 </p>
 
 ---
-
-## Controls
-
-- **W, A, S, D** – Move Up, Left, Down, Right
-- **R** – Restart the current level
-- **Q** – Quit the game
-- **T** – Open Tutorial (from Main Menu)
-
----
-
-## Map Legend & Example
-
-Maps are defined as 2D string arrays in `ConsoleMenu.cs`. The engine parses the characters into active `GameObjects`.
-
-| Symbol | Entity | Description |
-| :---: | --- | --- |
-| `#` | **Wall** | Impassable static object. |
-| `.` | **Target** | Destination for crates. |
-| `X` | **Crate** | Pushable object. |
-| `o` | **Player** | User-controlled character. |
-| `v ^ < >` | **Agents** | Autonomous agents moving in the specified direction. |
-
-### Example Map (Multi-Agent: Very Hard)
-
-```csharp
-"#########"
-"#       #"
-"# v X   #"  // Agent pacing vertically (v), Crate (X)
-"# . o . #"  // Targets (.), Player (o)
-"#   X ^ #"  // Agent pacing vertically (^)
-"#       #"
-"#########"
-```
 
 ## Architecture & Testing
 
